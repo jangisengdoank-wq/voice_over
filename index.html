@@ -5,79 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Affiliate Voice Studio PRO</title>
     
-    <!-- LIBRARIES -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- FIX: Versi Babel Stabil -->
     <script src="https://unpkg.com/@babel/standalone@7.23.6/babel.min.js"></script>
 
-    <!-- FONTS -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; overflow-x: hidden; color: white; }
         .font-display { font-family: 'Space Grotesk', sans-serif; }
-        
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        
-        /* Animasi Background Premium */
         .aurora-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; background: #020617; }
         .aurora-blob { position: absolute; filter: blur(90px); opacity: 0.4; animation: float-blob 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1); }
         .blob-purple { top: -10%; left: 20%; width: 40vw; height: 40vw; background: #6366f1; animation-delay: 0s; }
         .blob-pink { bottom: -10%; right: 10%; width: 35vw; height: 35vw; background: #ec4899; animation-delay: -5s; }
         .blob-blue { top: 40%; left: -10%; width: 30vw; height: 30vw; background: #3b82f6; animation-delay: -2s; opacity: 0.3; }
-
-        @keyframes float-blob {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(20px, -20px) scale(1.1); }
-        }
-
-        /* Glass Cards */
-        .glass-card {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
-        }
-        
-        .input-dark {
-            background: rgba(2, 6, 23, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s;
-        }
+        @keyframes float-blob { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(20px, -20px) scale(1.1); } }
+        .glass-card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3); }
+        .input-dark { background: rgba(2, 6, 23, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s; }
         .input-dark:focus { border-color: #818cf8; box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2); outline: none; }
-
-        .btn-glow {
-            position: relative; overflow: hidden;
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            transition: all 0.3s;
-        }
+        .btn-glow { position: relative; overflow: hidden; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); transition: all 0.3s; }
         .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4); }
     </style>
 
     <script type="importmap">
-    {
-        "imports": {
-            "lucide-react": "https://esm.sh/lucide-react@0.263.1"
-        }
-    }
+    { "imports": { "lucide-react": "https://esm.sh/lucide-react@0.263.1" } }
     </script>
 </head>
 <body>
-    
-    <!-- Background -->
     <div class="aurora-container">
         <div class="aurora-blob blob-purple"></div>
         <div class="aurora-blob blob-pink"></div>
         <div class="aurora-blob blob-blue"></div>
     </div>
 
-    <!-- Loading -->
     <div id="loading-screen" style="position:fixed; inset:0; background:#020617; z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center;">
         <div style="width:50px; height:50px; border:3px solid rgba(255,255,255,0.1); border-top-color:#6366f1; border-radius:50%; animation:spin 1s linear infinite;"></div>
         <p style="margin-top:20px; font-family:'Space Grotesk',sans-serif; color:#94a3b8; letter-spacing:2px; font-size:12px;">MEMUAT APLIKASI...</p>
@@ -121,12 +85,10 @@
             return bytes;
         };
 
-        // --- APP ---
         function App() {
-            // FIX: Tidak ada validasi Key manual lagi
-            const apiKey = ""; 
+            // API KEY DARI GAMBAR ANDA
+            const apiKey = "AlzaSyClP5BtzCovblE5udE4v1cLP3aobAxare4"; 
             
-            // DATA
             const [imageFile, setImageFile] = useState(null);
             const [imagePreview, setImagePreview] = useState(null);
             const [productName, setProductName] = useState('');
@@ -142,15 +104,13 @@
             const [activeTab, setActiveTab] = useState('script'); 
             const audioRef = useRef(null);
 
-            // DATA SUARA
             const voices = ['Kore', 'Puck', 'Charon', 'Fenrir', 'Aoede', 'Sulafat'];
             const accents = [{ id: 'Indo', label: 'Indo Gaul (Storytelling)' }, { id: 'Jawa', label: 'Logat Jawa (Santai)' }, { id: 'Sunda', label: 'Logat Sunda (Halus)' }];
             const durations = [{ val: '15', label: '15s' }, { val: '18', label: '18s' }, { val: '23', label: '23s' }, { val: '30', label: '30s' }, { val: '60', label: '60s' }];
 
-            // Hitung Estimasi Durasi (Rata-rata 2.5 kata/detik)
             const stats = useMemo(() => {
                 const words = generatedScript.trim().split(/\s+/).filter(w => w.length > 0).length;
-                const estSeconds = Math.ceil(words / 2.5); // Kecepatan bicara normal
+                const estSeconds = Math.ceil(words / 2.5);
                 return { words, estSeconds };
             }, [generatedScript]);
 
@@ -164,105 +124,60 @@
                 setImageFile(file); setImagePreview(URL.createObjectURL(file)); setLoadingStep('analyzing');
                 try {
                     const base64 = await fileToBase64(file);
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST', headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ contents: [{ parts: [{ text: "Analisis produk ini untuk affiliate marketing." }, { inlineData: { mimeType: file.type, data: base64 } }] }] })
                     });
                     const data = await res.json();
                     if(data.error) throw new Error(data.error.message);
                     setProductName("Produk Terdeteksi");
-                } catch(e) { 
-                    console.log("Upload Error:", e); // Silent error
-                    // alert(`Gagal analisis gambar: ${e.message}`); // Validasi dihapus sesuai request
-                } finally { setLoadingStep(null); }
+                } catch(e) { console.log("Upload Error:", e); } finally { setLoadingStep(null); }
             };
 
             const handleGenerateScript = async () => {
                 setLoadingStep('scripting');
                 try {
-                    // FIX: Hitung batas kata agar durasi pas
-                    // Kita gunakan faktor pengali konservatif 2.3 kata/detik agar tidak kepanjangan
                     const targetWords = Math.floor(parseInt(duration) * 2.3);
-
-                    // INSTRUKSI KHUSUS NASKAH BERSIH & PRESISI WAKTU
-                    const prompt = `
-                        Bertindaklah sebagai penulis naskah Voice Over (VO) profesional untuk Affiliate Marketing (TikTok/Shorts).
-                        Tugas: Buat naskah yang HANYA berisi kata-kata yang akan diucapkan oleh pengisi suara.
-                        
-                        Produk: ${productName || "Produk Umum"}
-                        Gaya Bicara: ${accent}
-                        Durasi Target: ${duration} detik (SANGAT PENTING)
-                        Info Tambahan: ${additionalInfo || "Buatkan yang menarik"}
-
-                        ATURAN KERAS (STRICT RULES):
-                        1. **PANJANG NASKAH**: Wajib sekitar ${targetWords} kata. Jangan lebih dari ${targetWords + 5} kata agar durasi pas ${duration} detik.
-                        2. JANGAN MENULIS label apapun seperti "Naskah VO", "Intro", "Scene 1".
-                        3. JANGAN menulis instruksi dalam kurung.
-                        4. HANYA tulis kalimat yang harus dibaca dubber.
-                        5. GANTI semua harga/diskon spesifik dengan kata-kata aman (Evergreen) seperti: "Harga Promo Spesial", "Cek Keranjang Kuning", "Harga lagi turun".
-                        6. Buat naskah yang padat, to the point, dan persuasif.
-
-                        FORMAT OUTPUT WAJIB (Gunakan pemisah "|||" tepat di tengah):
-                        [Naskah VO Murni]
-                        |||
-                        [Target Audiens]:... [Musik]:... [Caption]:... [Hashtags]:...
-                    `;
-                    
+                    const prompt = `Buat naskah VO pendek untuk produk ${productName || "ini"}. Durasi target ${duration} detik, sekitar ${targetWords} kata. Gaya: ${accent}. Tambahan: ${additionalInfo}. Pisahkan naskah dan caption dengan |||.`;
                     const parts = [{ text: prompt }];
                     if(imageFile) {
-                        try {
-                            const base64 = await fileToBase64(imageFile);
-                            parts.push({ inlineData: { mimeType: imageFile.type, data: base64 } });
-                        } catch (err) {
-                            console.error("Image process error", err);
-                        }
+                        const base64 = await fileToBase64(imageFile);
+                        parts.push({ inlineData: { mimeType: imageFile.type, data: base64 } });
                     }
-                    
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ contents: [{ parts }] })
                     });
                     const data = await res.json();
-                    if(data.error) throw new Error(data.error.message);
                     const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
                     const split = raw.split('|||');
                     setGeneratedScript(split[0].trim());
                     if(split[1]) setMarketingExtras(split[1].trim());
                     setActiveTab('script');
-                } catch(e) { 
-                    console.log("Generate Error:", e); 
-                    // alert(`Gagal membuat konten: ${e.message}`); // Validasi dihapus sesuai request
-                } finally { setLoadingStep(null); }
+                } catch(e) { console.log("Generate Error:", e); } finally { setLoadingStep(null); }
             };
 
             const handleGenerateAudio = async () => {
                 if(!generatedScript) return;
                 setLoadingStep('voicing'); setAudioUrl(null);
                 try {
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`, {
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST', headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ contents: [{ parts: [{ text: generatedScript }] }], generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } } })
                     });
                     const data = await res.json();
                     if(data.error) throw new Error(data.error.message);
                     const audioBase64 = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-                    const blob = new Blob([encodeWAV(base64ToInt16Array(data.candidates[0].content.parts[0].inlineData.data), 24000)], { type: 'audio/wav' });
+                    const blob = new Blob([encodeWAV(base64ToInt16Array(audioBase64), 24000)], { type: 'audio/wav' });
                     setAudioUrl(URL.createObjectURL(blob));
-                } catch(e) { 
-                    console.log("Audio Error:", e); 
-                    // alert(`Gagal convert audio: ${e.message}`); // Validasi dihapus sesuai request
-                } finally { setLoadingStep(null); }
+                } catch(e) { console.log("Audio Error:", e); } finally { setLoadingStep(null); }
             };
 
-            const handleDownload = () => { if(audioUrl) { const a = document.createElement('a'); a.href = audioUrl; a.download = `VO-${Date.now()}.wav`; document.body.appendChild(a); a.click(); document.body.removeChild(a); } };
+            const handleDownload = () => { if(audioUrl) { const a = document.createElement('a'); a.href = audioUrl; a.download = `VO-${Date.now()}.wav`; a.click(); } };
             const copyToClipboard = (text) => { navigator.clipboard.writeText(text); alert("Disalin!"); };
 
-            // === MAIN DASHBOARD ===
             return (
                 <div className="min-h-screen pb-20 relative">
-                    
                     <div className="max-w-7xl mx-auto p-4 lg:p-6">
-                        
-                        {/* HEADER */}
                         <header className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-6">
                             <div className="flex items-center gap-5">
                                 <div className="w-14 h-14 bg-gradient-to-br from-slate-800 to-black border border-white/10 rounded-2xl flex items-center justify-center shadow-2xl">
@@ -281,31 +196,20 @@
                             </div>
                         </header>
 
-                        {/* CONTENT */}
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-                            
-                            {/* LEFT COLUMN */}
                             <div className="lg:col-span-5 space-y-5">
-                                {/* Upload */}
                                 <div className="glass-card rounded-[24px] p-2">
                                     <div className="bg-slate-950/40 rounded-[20px] p-3 flex items-center gap-3 mb-2">
                                         <div className="w-6 h-6 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold text-xs">1</div>
                                         <h2 className="text-xs font-bold text-indigo-100 uppercase tracking-wide">Upload Produk</h2>
                                     </div>
-                                    
                                     <div className={`relative w-full aspect-video rounded-xl border-2 border-dashed border-slate-700/50 flex flex-col items-center justify-center overflow-hidden cursor-pointer hover:border-indigo-500/50 transition-all bg-black ${imagePreview ? 'p-0 border-none' : ''}`}>
                                         <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 opacity-0 z-20 cursor-pointer" />
-                                        {imagePreview ? (
-                                            <img src={imagePreview} className="w-full h-full object-contain z-10" />
-                                        ) : (
-                                            <div className="text-center group"><div className="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform"><Upload className="w-5 h-5 text-slate-400 group-hover:text-white" /></div><p className="text-[10px] text-slate-500 font-medium">Klik Area Ini</p></div>
-                                        )}
+                                        {imagePreview ? <img src={imagePreview} className="w-full h-full object-contain z-10" /> : <div className="text-center group"><div className="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform"><Upload className="w-5 h-5 text-slate-400 group-hover:text-white" /></div><p className="text-[10px] text-slate-500 font-medium">Klik Area Ini</p></div>}
                                     </div>
-                                    
                                     <input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="Nama Produk (Opsional)" className="w-full mt-2 input-dark rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none" />
                                 </div>
 
-                                {/* Inputs */}
                                 <div className="glass-card rounded-[24px] p-5 space-y-4">
                                     <div>
                                         <label className="text-[10px] font-bold text-emerald-400 uppercase mb-1.5 flex items-center gap-1"><Sparkles className="w-3 h-3"/> Target Viral</label>
@@ -323,39 +227,28 @@
                                 </button>
                             </div>
 
-                            {/* RIGHT COLUMN */}
                             <div className="lg:col-span-7 space-y-5 flex flex-col">
-                                {/* Settings Area */}
                                 <div className="glass-card p-5 rounded-[24px] space-y-4">
                                     <div className="flex items-center gap-2 mb-1 border-b border-white/5 pb-2">
                                         <div className="w-5 h-5 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-[10px]">2</div>
                                         <h2 className="text-xs font-bold text-purple-200 uppercase tracking-wide">Pengaturan Suara</h2>
                                     </div>
-                                    
-                                    <div>
-                                        <div className="grid grid-cols-3 gap-2">
-                                            {voices.map((v) => (
-                                                <button key={v} onClick={() => setVoice(v)} className={`py-2 px-2 rounded-lg text-xs font-bold transition-all border ${voice === v ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg' : 'bg-slate-900/50 border-slate-700/50 text-slate-400 hover:border-slate-500 hover:text-slate-200'}`}>{v}</button>
-                                            ))}
-                                        </div>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {voices.map((v) => (
+                                            <button key={v} onClick={() => setVoice(v)} className={`py-2 px-2 rounded-lg text-xs font-bold transition-all border ${voice === v ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg' : 'bg-slate-900/50 border-slate-700/50 text-slate-400 hover:border-slate-500 hover:text-slate-200'}`}>{v}</button>
+                                        ))}
                                     </div>
-
                                     <div className="grid grid-cols-2 gap-3">
-                                        <div>
-                                            <select value={accent} onChange={(e) => setAccent(e.target.value)} className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none cursor-pointer">
-                                                {accents.map(o=><option key={o.id} value={o.id}>{o.label}</option>)}
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <select value={duration} onChange={(e) => setDuration(e.target.value)} className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none cursor-pointer">
-                                                {durations.map(d=><option key={d.val} value={d.val}>{d.label}</option>)}
-                                            </select>
-                                        </div>
+                                        <select value={accent} onChange={(e) => setAccent(e.target.value)} className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none cursor-pointer">
+                                            {accents.map(o=><option key={o.id} value={o.id}>{o.label}</option>)}
+                                        </select>
+                                        <select value={duration} onChange={(e) => setDuration(e.target.value)} className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none cursor-pointer">
+                                            {durations.map(d=><option key={d.val} value={d.val}>{d.label}</option>)}
+                                        </select>
                                     </div>
                                 </div>
 
-                                {/* Editor & Output */}
-                                <div className="glass-card rounded-[24px] overflow-hidden flex flex-col flex-1 min-h-[600px] lg:min-h-[600px]">
+                                <div className="glass-card rounded-[24px] overflow-hidden flex flex-col flex-1 min-h-[600px]">
                                     <div className="bg-slate-900/50 p-2 flex gap-1 border-b border-white/5">
                                         <button onClick={() => setActiveTab('script')} className={`flex-1 py-3 text-xs font-bold rounded-xl transition-all ${activeTab === 'script' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:text-slate-300'}`}>NASKAH AUDIO</button>
                                         <button onClick={() => setActiveTab('extras')} className={`flex-1 py-3 text-xs font-bold rounded-xl transition-all ${activeTab === 'extras' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:text-slate-300'}`}>CAPTION & TAGS</button>
@@ -363,45 +256,26 @@
 
                                     <div className="flex-1 p-1 relative bg-slate-950/30">
                                         {activeTab === 'script' ? (
-                                            <textarea value={generatedScript} onChange={(e) => setGeneratedScript(e.target.value)} placeholder="Hasil AI muncul disini... Tulis manual juga bisa." className="w-full h-full bg-transparent p-6 text-base leading-relaxed text-slate-200 focus:outline-none resize-none font-mono"></textarea>
+                                            <textarea value={generatedScript} onChange={(e) => setGeneratedScript(e.target.value)} placeholder="Hasil AI muncul disini..." className="w-full h-full bg-transparent p-6 text-base leading-relaxed text-slate-200 focus:outline-none resize-none font-mono"></textarea>
                                         ) : (
-                                            <div className="p-6 h-full overflow-y-auto space-y-6 custom-scrollbar">
-                                                {marketingExtras ? (
-                                                    <div className="space-y-6">
-                                                        <div className="space-y-2">
-                                                            <label className="text-xs font-bold text-purple-400 uppercase tracking-widest flex items-center gap-2"><Music className="w-3 h-3"/> Musik Latar</label>
-                                                            <div className="p-4 rounded-xl bg-slate-900/50 border border-white/5 text-sm text-slate-300">{marketingExtras.split('[Caption Video]:')[0].split('[Rekomendasi Musik]:')[1]?.trim() || "-"}</div>
-                                                        </div>
-                                                        <div className="space-y-2">
-                                                            <div className="flex justify-between"><label className="text-xs font-bold text-pink-400 uppercase tracking-widest flex items-center gap-2"><FileText className="w-3 h-3"/> Caption</label><button onClick={() => copyToClipboard(marketingExtras.split('[Caption Video]:')[1]?.trim())} className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1"><Copy className="w-3 h-3"/> Salin</button></div>
-                                                            <div className="p-4 rounded-xl bg-slate-900/50 border border-white/5 text-sm text-slate-300 font-mono whitespace-pre-wrap">{marketingExtras.split('[Caption Video]:')[1]?.trim() || "-"}</div>
-                                                        </div>
-                                                    </div>
-                                                ) : <div className="flex flex-col items-center justify-center h-full text-slate-600 gap-3"><LayoutGrid className="w-10 h-10 opacity-20" /><p className="text-sm">Belum ada data</p></div>}
+                                            <div className="p-6 h-full overflow-y-auto space-y-6">
+                                                {marketingExtras ? <div className="p-4 rounded-xl bg-slate-900/50 border border-white/5 text-sm text-slate-300">{marketingExtras}</div> : <div className="flex flex-col items-center justify-center h-full text-slate-600 gap-3"><LayoutGrid className="w-10 h-10 opacity-20" /><p className="text-sm">Belum ada data</p></div>}
                                             </div>
                                         )}
                                     </div>
 
-                                    <div className="p-4 bg-slate-900/50 border-t border-white/5 backdrop-blur-xl">
+                                    <div className="p-4 bg-slate-900/50 border-t border-white/5">
                                         {activeTab === 'script' && (
                                             <>
                                                 <div className="flex items-center justify-end mb-4 px-2 gap-3">
-                                                    
-                                                    {/* Badge Kata */}
-                                                    <div className="bg-slate-900/80 border border-slate-700/50 rounded-lg px-3 py-1.5 flex items-center gap-2 text-xs font-medium text-slate-300 shadow-sm">
-                                                        <FileText className="w-3.5 h-3.5 opacity-60"/>
-                                                        <span>{stats.words} Kata</span>
+                                                    <div className="bg-slate-900/80 border border-slate-700/50 rounded-lg px-3 py-1.5 flex items-center gap-2 text-xs font-medium text-slate-300">
+                                                        <FileText className="w-3.5 h-3.5 opacity-60"/><span>{stats.words} Kata</span>
                                                     </div>
-
-                                                    {/* FIX: Badge Detik Mirip Gambar (Gelap Merah, Border Merah, Teks Pink) */}
-                                                    <div className={`rounded-lg px-3 py-1.5 flex items-center gap-2 text-xs font-bold border shadow-[0_0_15px_rgba(244,63,94,0.1)] transition-colors bg-[#3f151b] border-[#8a2c38] text-[#ff8fa3]`}>
-                                                        <Clock className="w-3.5 h-3.5"/>
-                                                        <span>~{stats.estSeconds} Detik</span>
+                                                    <div className="rounded-lg px-3 py-1.5 flex items-center gap-2 text-xs font-bold border bg-[#3f151b] border-[#8a2c38] text-[#ff8fa3]">
+                                                        <Clock className="w-3.5 h-3.5"/><span>~{stats.estSeconds} Detik</span>
                                                     </div>
-
                                                 </div>
-
-                                                <button onClick={handleGenerateAudio} disabled={loadingStep !== null || !generatedScript} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">
+                                                <button onClick={handleGenerateAudio} disabled={loadingStep !== null || !generatedScript} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-3">
                                                     {loadingStep === 'voicing' ? <RefreshCw className="w-5 h-5 animate-spin"/> : <FileAudio className="w-5 h-5"/>}
                                                     {loadingStep === 'voicing' ? 'MERACIK SUARA...' : 'CONVERT KE AUDIO'}
                                                 </button>
@@ -411,18 +285,16 @@
                                 </div>
 
                                 {audioUrl && (
-                                    <div className="glass-card border-emerald-500/30 p-4 rounded-3xl shadow-2xl animate-float">
+                                    <div className="glass-card border-emerald-500/30 p-4 rounded-3xl shadow-2xl">
                                         <div className="flex items-center justify-between mb-3">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center"><CheckCircle2 className="w-5 h-5 text-emerald-400" /></div>
-                                                <div><h3 className="text-white font-bold text-sm">Audio Siap!</h3><p className="text-emerald-400/60 text-[10px] font-bold tracking-wider">SIAP DOWNLOAD</p></div>
+                                                <div><h3 className="text-white font-bold text-sm">Audio Siap!</h3><p className="text-emerald-400/60 text-[10px] font-bold tracking-wider uppercase">Siap Download</p></div>
                                             </div>
                                         </div>
-                                        
-                                        {/* FIX: PLAYER FULL WIDTH & PUTIH (Tanpa Filter) */}
                                         <div className="flex items-center gap-2 mt-2">
                                             <audio src={audioUrl} controls className="w-full h-11 rounded-lg" />
-                                            <button onClick={handleDownload} className="bg-white text-emerald-900 p-3 rounded-xl hover:scale-105 transition-transform shadow-lg flex-shrink-0"><Download className="w-5 h-5" /></button>
+                                            <button onClick={handleDownload} className="bg-white text-emerald-900 p-3 rounded-xl hover:scale-105 transition-transform"><Download className="w-5 h-5" /></button>
                                         </div>
                                     </div>
                                 )}

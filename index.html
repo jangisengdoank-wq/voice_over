@@ -5,33 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Affiliate Voice Studio PRO</title>
     
-    <!-- 1. LOAD LIBRARY UTAMA SECARA MANUAL (BIAR ANTI BLANK) -->
+    <!-- LIBRARIES -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- 2. BABEL VERSI STABIL (7.21.2) - JANGAN DIGANTI -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.2/babel.min.js"></script>
+    <!-- FIX: Versi Babel Stabil -->
+    <script src="https://unpkg.com/@babel/standalone@7.23.6/babel.min.js"></script>
 
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; overflow-x: hidden; color: white; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
         
-        /* Loading Overlay */
-        #loading-screen {
-            position: fixed; inset: 0; background: #020617; z-index: 9999;
-            display: flex; justify-content: center; align-items: center; color: white;
-            font-family: sans-serif; flex-direction: column; gap: 10px;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        
+        /* Animasi Background Premium */
+        .aurora-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; background: #020617; }
+        .aurora-blob { position: absolute; filter: blur(90px); opacity: 0.4; animation: float-blob 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1); }
+        .blob-purple { top: -10%; left: 20%; width: 40vw; height: 40vw; background: #6366f1; animation-delay: 0s; }
+        .blob-pink { bottom: -10%; right: 10%; width: 35vw; height: 35vw; background: #ec4899; animation-delay: -5s; }
+        .blob-blue { top: 40%; left: -10%; width: 30vw; height: 30vw; background: #3b82f6; animation-delay: -2s; opacity: 0.3; }
+
+        @keyframes float-blob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(20px, -20px) scale(1.1); }
         }
+
+        /* Glass Cards */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-dark {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        .input-dark:focus { border-color: #818cf8; box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2); outline: none; }
+
+        .btn-glow {
+            position: relative; overflow: hidden;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            transition: all 0.3s;
+        }
+        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4); }
     </style>
 
-    <!-- Import Map khusus untuk Icons -->
     <script type="importmap">
     {
         "imports": {
@@ -40,92 +68,67 @@
     }
     </script>
 </head>
-<body class="bg-slate-950 text-white selection:bg-indigo-500 selection:text-white">
+<body>
     
-    <!-- Layar Loading -->
-    <div id="loading-screen">
-        <div style="width: 40px; height: 40px; border: 4px solid #6366f1; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-        <p>Memuat Sistem...</p>
+    <!-- Background -->
+    <div class="aurora-container">
+        <div class="aurora-blob blob-purple"></div>
+        <div class="aurora-blob blob-pink"></div>
+        <div class="aurora-blob blob-blue"></div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading-screen" style="position:fixed; inset:0; background:#020617; z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+        <div style="width:50px; height:50px; border:3px solid rgba(255,255,255,0.1); border-top-color:#6366f1; border-radius:50%; animation:spin 1s linear infinite;"></div>
+        <p style="margin-top:20px; font-family:'Space Grotesk',sans-serif; color:#94a3b8; letter-spacing:2px; font-size:12px;">MEMUAT APLIKASI...</p>
         <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
     </div>
 
-    <!-- Tempat App Muncul -->
     <div id="root"></div>
 
-    <!-- Error Handler -->
-    <script>
-        window.onerror = function(msg, url, line) {
-            const screen = document.getElementById('loading-screen');
-            if(screen) {
-                // Abaikan error resize observer yg tidak penting
-                if (msg && msg.includes && msg.includes('ResizeObserver')) return;
-                screen.innerHTML = '<div style="color:#ff5555; text-align:center; padding:20px; max-width:400px; line-height:1.5;"><h3>⚠️ Gagal Memuat!</h3><p>'+msg+'</p><p style="font-size:12px; opacity:0.7; margin-top:10px;">Cek koneksi internet atau refresh halaman.</p></div>';
-            }
-        };
-    </script>
-
-    <!-- KODE APLIKASI -->
-    <script type="text/babel" data-type="module">
-        // Kita ambil React dari global variable (karena sudah di-load di head)
+    <script type="text/babel" data-type="module" data-presets="react">
         const { useState, useRef, useEffect } = React;
         const { createRoot } = ReactDOM;
-        
-        // Icons tetap import dari ESM
-        import { Upload, Mic, Play, Square, Download, Wand2, FileAudio, RefreshCw, Settings, AlertCircle, CheckCircle2, Search, FileText, Sparkles, ChevronRight, Hash, Music, Copy, UserCircle, ShieldCheck, Lock, Key } from 'lucide-react';
+        import { 
+            Upload, Mic, Play, Square, Download, Wand2, FileAudio, RefreshCw, 
+            Settings, AlertCircle, CheckCircle2, Search, FileText, Sparkles, 
+            Hash, Music, Copy, UserCircle, ShieldCheck, Lock, Key, LogOut, 
+            Crown, Zap, Star, ChevronRight, Fingerprint, LayoutGrid, X
+        } from 'lucide-react';
 
-        // Hilangkan loading screen
         setTimeout(() => {
             const loader = document.getElementById('loading-screen');
-            if(loader) loader.style.display = 'none';
+            if(loader) { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
         }, 800);
 
-        // --- UTILITY: WAV ENCODER ---
-        const writeString = (view, offset, string) => {
-            for (let i = 0; i < string.length; i++) {
-                view.setUint8(offset + i, string.charCodeAt(i));
-            }
-        };
-
+        // --- UTILS ---
+        const writeString = (view, offset, string) => { for (let i = 0; i < string.length; i++) { view.setUint8(offset + i, string.charCodeAt(i)); } };
         const encodeWAV = (samples, sampleRate = 24000) => {
             const buffer = new ArrayBuffer(44 + samples.length * 2);
             const view = new DataView(buffer);
-            writeString(view, 0, 'RIFF');
-            view.setUint32(4, 36 + samples.length * 2, true);
-            writeString(view, 8, 'WAVE');
-            writeString(view, 12, 'fmt ');
-            view.setUint32(16, 16, true);
-            view.setUint16(20, 1, true);
-            view.setUint16(22, 1, true);
-            view.setUint32(24, sampleRate, true);
-            view.setUint32(28, sampleRate * 2, true);
-            view.setUint16(32, 2, true);
-            view.setUint16(34, 16, true);
-            writeString(view, 36, 'data');
+            writeString(view, 0, 'RIFF'); view.setUint32(4, 36 + samples.length * 2, true); writeString(view, 8, 'WAVE'); writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true); view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true); writeString(view, 36, 'data');
             view.setUint32(40, samples.length * 2, true);
-            let offset = 44;
-            for (let i = 0; i < samples.length; i++) {
-                view.setInt16(offset, samples[i], true);
-                offset += 2;
-            }
+            let offset = 44; for (let i = 0; i < samples.length; i++) { view.setInt16(offset, samples[i], true); offset += 2; }
             return view;
         };
-
         const base64ToInt16Array = (base64) => {
             const binaryString = window.atob(base64);
             const len = binaryString.length;
             const bytes = new Int16Array(len / 2);
-            for (let i = 0; i < len; i += 2) {
-                bytes[i / 2] = (binaryString.charCodeAt(i+1) << 8) | binaryString.charCodeAt(i);
-            }
+            for (let i = 0; i < len; i += 2) { bytes[i / 2] = (binaryString.charCodeAt(i+1) << 8) | binaryString.charCodeAt(i); }
             return bytes;
         };
 
-        // --- MAIN APP COMPONENT ---
+        // --- APP ---
         function App() {
-            // API KEY DARI ABANG (SUDAH FIX)
-            const apiKey = "AIzaSyDsQMOPJNwm4gSb69RNyL3u4NyRo0CIXtg"; 
+            // ✅ API KEY TERBARU (DARI GAMBAR)
+            const defaultKey = "AIzaSyA1bvPF2woUeZTeUZMC8YHpC0CPU9FdY1w"; 
+            const [apiKey, setApiKey] = useState(defaultKey);
+            const [showSettings, setShowSettings] = useState(false);
 
-            // App State
+            // DATA
             const [imageFile, setImageFile] = useState(null);
             const [imagePreview, setImagePreview] = useState(null);
             const [productName, setProductName] = useState('');
@@ -134,417 +137,295 @@
             const [voice, setVoice] = useState('Kore');
             const [accent, setAccent] = useState('Indo');
             const [duration, setDuration] = useState('15');
-            
-            // Output State
             const [generatedScript, setGeneratedScript] = useState(''); 
             const [marketingExtras, setMarketingExtras] = useState(null); 
             const [audioUrl, setAudioUrl] = useState(null);
             const [loadingStep, setLoadingStep] = useState(null);
-            const [errorMsg, setErrorMsg] = useState('');
             const [activeTab, setActiveTab] = useState('script'); 
-
             const audioRef = useRef(null);
 
+            // DATA SUARA
             const voices = ['Kore', 'Puck', 'Charon', 'Fenrir', 'Aoede', 'Sulafat'];
-            const accents = [
-                { id: 'Indo', label: 'Indo Gaul (Storytelling)' },
-                { id: 'Jawa', label: 'Logat Jawa (Medok Santuy)' },
-                { id: 'Sunda', label: 'Logat Sunda (Halus)' }
-            ];
-            const durations = [
-                { val: '15', label: '15s' },
-                { val: '18', label: '18s' },
-                { val: '23', label: '23s' },
-                { val: '30', label: '30s' },
-                { val: '60', label: '60s' }
-            ];
+            const accents = [{ id: 'Indo', label: 'Indo Gaul (Storytelling)' }, { id: 'Jawa', label: 'Logat Jawa (Santai)' }, { id: 'Sunda', label: 'Logat Sunda (Halus)' }];
+            const durations = [{ val: '15', label: '15s' }, { val: '18', label: '18s' }, { val: '23', label: '23s' }, { val: '30', label: '30s' }, { val: '60', label: '60s' }];
 
-            const fileToBase64 = (file) => {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => resolve(reader.result.split(',')[1]);
-                    reader.onerror = (error) => reject(error);
-                });
+            // INIT
+            useEffect(() => {
+                const storedKey = localStorage.getItem('aff_custom_key');
+                if (storedKey) setApiKey(storedKey);
+            }, []);
+
+            // HANDLERS
+            const handleSaveKey = (newKey) => {
+                setApiKey(newKey);
+                localStorage.setItem('aff_custom_key', newKey);
+                setShowSettings(false);
+                alert('API Key Diupdate!');
             };
 
+            const fileToBase64 = (file) => new Promise((resolve, reject) => {
+                const reader = new FileReader(); reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = reject;
+            });
+
             const handleImageUpload = async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                setImageFile(file);
-                setImagePreview(URL.createObjectURL(file));
-                setLoadingStep('analyzing');
-                setErrorMsg('');
-
-                if (!apiKey) {
-                    setErrorMsg("API Key Missing!");
-                    setLoadingStep(null);
-                    return;
-                }
-
+                const file = e.target.files[0]; if (!file) return;
+                setImageFile(file); setImagePreview(URL.createObjectURL(file)); setLoadingStep('analyzing');
                 try {
-                    const base64Image = await fileToBase64(file);
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [
-                                    { text: "Analisis gambar ini untuk keperluan penjualan affiliate. Identifikasi nama produk, fitur utama, dan target audiens." },
-                                    { inlineData: { mimeType: file.type, data: base64Image } }
-                                ]
-                            }]
-                        })
+                    const base64 = await fileToBase64(file);
+                    // Use standard model compatible with preview environment
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ contents: [{ parts: [{ text: "Analisis produk ini untuk affiliate marketing." }, { inlineData: { mimeType: file.type, data: base64 } }] }] })
                     });
-                    const data = await response.json();
-                    if (data.error) throw new Error(data.error.message);
+                    const data = await res.json();
+                    if(data.error) throw new Error(data.error.message);
                     setProductName("Produk Terdeteksi");
-                } catch (err) {
-                    setErrorMsg(`Gagal scan gambar: ${err.message}`);
-                } finally {
-                    setLoadingStep(null);
-                }
+                } catch(e) { 
+                    console.error("Upload Error:", e); // Error masuk console saja, tidak ke UI
+                } finally { setLoadingStep(null); }
             };
 
             const handleGenerateScript = async () => {
                 setLoadingStep('scripting');
-                setErrorMsg('');
-                setMarketingExtras(null);
-
                 try {
-                    const targetWords = Math.floor(parseInt(duration) * 2.6);
-                    const minWords = Math.floor(targetWords * 0.9);
-                    const maxWords = Math.floor(targetWords * 1.1);
-
-                    const styleInstruction = accent === 'Indo' 
-                        ? 'Gunakan bahasa santai, friendly, kekinian, natural, seperti cerita pengalaman pribadi.'
-                        : accent === 'Jawa' 
-                        ? 'Gunakan bahasa Indonesia campur logat Jawa santai.'
-                        : 'Gunakan bahasa Indonesia campur logat Sunda ramah.';
-
-                    const seoInstruction = seoKeywords
-                        ? `ATURAN SEO: Kata kunci "${seoKeywords}" WAJIB diucapkan DUA KALI (Awal & Akhir).`
-                        : '';
-
-                    const fullPrompt = `
-                        Peran: Content Creator Affiliate TikTok Pro.
-                        Tugas: Buat Naskah VO dan Strategi Marketing.
-                        Nama Produk: ${productName}.
-                        Gaya: ${styleInstruction}
-                        ${seoInstruction}
-                        CATATAN: "${additionalInfo}"
-                        DURASI: ${duration} detik (${minWords}-${maxWords} kata).
+                    // INSTRUKSI KHUSUS NASKAH BERSIH
+                    const prompt = `
+                        Peran: Copywriter Affiliate TikTok Profesional. 
+                        Tugas: Buat Naskah Voice Over (VO) yang SIAP DIBACA.
+                        Produk: ${productName}. 
+                        Gaya: ${accent}. 
+                        Info: ${additionalInfo}. 
+                        Durasi: ${duration}s. 
                         
-                        INSTRUKSI:
-                        1. Tone: Natural, Emosional, Intonasi naik turun.
-                        2. JANGAN GUNAKAN "Link di bio". GUNAKAN "Checkout sekarang".
-                        3. JANGAN SEBUT nominal harga.
-
-                        FORMAT OUTPUT (Pemisah "|||"):
-                        [Naskah VO Polos]
-                        |||
-                        [Target Audiens]: ...
-                        [Rekomendasi Musik]: ...
-                        [Caption Video]: ...
-                        [Hashtags]: ...
+                        SANGAT PENTING: 
+                        1. Tulis HANYA kata-kata yang diucapkan. 
+                        2. JANGAN sertakan (Teks di layar), (Musik), VO:, Scene:, atau instruksi visual apapun.
+                        3. Jangan sebut harga nominal (Rp), ganti dengan "harga terjangkau".
+                        4. Bahasa harus mengalir, natural, storytelling.
+                        
+                        OUTPUT FORMAT (Pemisah |||): 
+                        [Isi Naskah VO Saja] 
+                        ||| 
+                        [Target Audiens]:... [Musik]:... [Caption]:... [Tags]:...
                     `;
-
-                    const partsContent = [{ text: fullPrompt }];
-                    if (imageFile) {
-                        partsContent.push({ inlineData: { mimeType: imageFile.type, data: await fileToBase64(imageFile) } });
-                    }
-
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: partsContent }] })
+                    
+                    const parts = [{ text: prompt }];
+                    if(imageFile) parts.push({ inlineData: { mimeType: imageFile.type, data: await fileToBase64(imageFile) } });
+                    
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ contents: [{ parts }] })
                     });
-
-                    const data = await response.json();
-                    if (data.error) throw new Error(data.error.message);
-
-                    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                    const parts = rawText.split('|||');
-                    setGeneratedScript(parts[0].trim());
-                    if (parts[1]) setMarketingExtras(parts[1].trim());
+                    const data = await res.json();
+                    if(data.error) throw new Error(data.error.message);
+                    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                    const split = raw.split('|||');
+                    setGeneratedScript(split[0].trim());
+                    if(split[1]) setMarketingExtras(split[1].trim());
                     setActiveTab('script');
-
-                } catch (err) {
-                    setErrorMsg(`Error: ${err.message}`);
-                } finally {
-                    setLoadingStep(null);
-                }
+                } catch(e) { console.error("Generate Error:", e); } finally { setLoadingStep(null); }
             };
 
             const handleGenerateAudio = async () => {
-                if (!generatedScript) return;
-                setLoadingStep('voicing');
-                setErrorMsg('');
-                setAudioUrl(null);
-
+                if(!generatedScript) return;
+                setLoadingStep('voicing'); setAudioUrl(null);
                 try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: generatedScript }] }],
-                            generationConfig: {
-                                responseModalities: ["AUDIO"],
-                                speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } }
-                            }
-                        })
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`, {
+                        method: 'POST', headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ contents: [{ parts: [{ text: generatedScript }] }], generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } } })
                     });
-
-                    const data = await response.json();
-                    if (data.error) throw new Error(data.error.message);
-
+                    const data = await res.json();
+                    if(data.error) throw new Error(data.error.message);
                     const audioBase64 = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-                    const pcmSamples = base64ToInt16Array(audioBase64);
-                    const wavDataView = encodeWAV(pcmSamples, 24000);
-                    const blob = new Blob([wavDataView], { type: 'audio/wav' });
+                    const blob = new Blob([encodeWAV(base64ToInt16Array(data.candidates[0].content.parts[0].inlineData.data), 24000)], { type: 'audio/wav' });
                     setAudioUrl(URL.createObjectURL(blob));
-                } catch (err) {
-                    setErrorMsg(`Gagal generate audio: ${err.message}`);
-                } finally {
-                    setLoadingStep(null);
-                }
+                } catch(e) { console.error("Audio Error:", e); } finally { setLoadingStep(null); }
             };
 
-            const handleDownload = () => {
-                if (!audioUrl) return;
-                const now = new Date();
-                const filename = `AUDIO-${now.getTime()}.wav`;
-                const a = document.createElement('a');
-                a.href = audioUrl;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            };
+            const handleDownload = () => { if(audioUrl) { const a = document.createElement('a'); a.href = audioUrl; a.download = `VO-${Date.now()}.wav`; document.body.appendChild(a); a.click(); document.body.removeChild(a); } };
+            const copyToClipboard = (text) => { navigator.clipboard.writeText(text); alert("Disalin!"); };
 
-            const copyToClipboard = (text) => {
-                navigator.clipboard.writeText(text);
-                alert("Teks berhasil disalin!");
-            };
+            // === KEY MODAL ===
+            const KeyModal = () => (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="glass-card w-full max-w-md p-6 rounded-2xl border border-white/20">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-bold text-white flex items-center gap-2"><Settings className="w-5 h-5"/> Update API Key</h3>
+                            <button onClick={() => setShowSettings(false)}><X className="w-5 h-5 text-slate-400 hover:text-white"/></button>
+                        </div>
+                        <input type="text" placeholder="Paste API Key Gemini disini..." className="w-full input-dark p-3 rounded-xl text-white text-sm mb-4 font-mono" id="newApiKeyInput" defaultValue={apiKey} />
+                        <button onClick={() => handleSaveKey(document.getElementById('newApiKeyInput').value)} className="w-full btn-glow py-3 rounded-xl font-bold text-white">SIMPAN KEY</button>
+                    </div>
+                </div>
+            );
 
+            // === MAIN DASHBOARD ===
             return (
-                <div className="relative max-w-6xl mx-auto p-4 lg:p-8 pb-20">
+                <div className="min-h-screen pb-20 relative">
                     
-                    {/* HEADER */}
-                    <header className="flex flex-col md:flex-row md:items-center justify-between mb-10 py-4 border-b border-white/5 gap-4">
-                        <div className="flex items-center gap-4">
-                            <div className="relative group">
-                                <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl blur opacity-40 group-hover:opacity-75 transition"></div>
-                                <div className="relative w-14 h-14 bg-slate-900 ring-1 ring-white/10 rounded-2xl flex items-center justify-center shadow-2xl">
-                                    <Mic className="w-7 h-7 text-white" />
-                                </div>
-                            </div>
-                            <div>
-                                <h1 className="text-2xl md:text-3xl font-black tracking-tight">
-                                    AFFILIATE STUDIO <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">PRO</span>
-                                </h1>
-                                <div className="flex items-center gap-3 mt-1.5">
-                                    <span className="bg-indigo-500/10 text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-indigo-500/20 backdrop-blur-md">V 2.0 ULTIMATE</span>
-                                    <p className="text-xs text-slate-400 font-medium tracking-wide">
-                                        Official Software by <span className="text-amber-400 font-black tracking-wider uppercase">JAUHARI</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="hidden md:block text-right bg-slate-900/50 p-2 px-4 rounded-xl border border-white/5 backdrop-blur-sm">
-                             <div className="flex items-center justify-end gap-2 text-emerald-400 font-bold text-sm">
-                                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div> SYSTEM ONLINE
-                             </div>
-                             <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">Ready to Generate</p>
-                        </div>
-                    </header>
+                    {showSettings && <KeyModal />}
 
-                    {/* ERROR MSG */}
-                    {errorMsg && (
-                        <div className="mb-6 bg-red-500/10 border border-red-500/20 text-red-200 p-4 rounded-2xl flex items-start gap-3 animate-pulse">
-                            <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
-                            <p className="text-sm">{errorMsg}</p>
-                        </div>
-                    )}
-
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
+                    <div className="max-w-7xl mx-auto p-4 lg:p-8">
                         
-                        {/* LEFT COLUMN */}
-                        <div className="lg:col-span-5 space-y-6">
-                            
-                            {/* UPLOAD SECTION */}
-                            <div className="bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-1 shadow-2xl overflow-hidden">
-                                <div className="bg-slate-800/50 p-3 px-5 border-b border-white/5 flex items-center gap-2">
-                                    <div className="w-6 h-6 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-xs font-bold">1</div>
-                                    <h2 className="text-xs font-bold text-indigo-300 uppercase tracking-wider">Sumber Gambar</h2>
+                        {/* HEADER */}
+                        <header className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
+                            <div className="flex items-center gap-5">
+                                <div className="w-16 h-16 bg-gradient-to-br from-slate-800 to-black border border-white/10 rounded-2xl flex items-center justify-center shadow-2xl">
+                                    <Mic className="w-8 h-8 text-indigo-400" />
                                 </div>
-                                <div className="p-5">
-                                    <div className={`relative group w-full rounded-2xl border-2 border-dashed border-slate-700 hover:border-indigo-500/50 transition-all bg-slate-900/50 flex flex-col items-center justify-center overflow-hidden cursor-pointer ${imagePreview ? 'p-2' : 'aspect-video'}`}>
-                                        <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 opacity-0 z-20 cursor-pointer w-full h-full" />
+                                <div>
+                                    <h1 className="text-2xl md:text-3xl font-display font-black text-white tracking-tight">AFFILIATE STUDIO <span className="text-indigo-500">PRO</span></h1>
+                                    <div className="flex items-center gap-2 mt-2">
+                                        <span className="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-bold px-3 py-0.5 rounded-full flex items-center gap-1"><Crown className="w-3 h-3"/> VIP MEMBER (UNLIMITED)</span>
+                                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest pl-2 border-l border-white/10">Official Software by JAUHARI</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <button onClick={() => setShowSettings(true)} className="w-12 h-12 glass-card rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-all" title="Settings API Key"><Settings className="w-5 h-5" /></button>
+                            </div>
+                        </header>
+
+                        {/* CONTENT */}
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                            
+                            {/* LEFT COLUMN */}
+                            <div className="lg:col-span-5 space-y-6">
+                                {/* Upload */}
+                                <div className="glass-card rounded-[24px] p-2">
+                                    <div className="bg-slate-950/40 rounded-[20px] p-4 flex items-center gap-3 mb-2">
+                                        <div className="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold text-sm">1</div>
+                                        <h2 className="text-sm font-bold text-indigo-100 uppercase tracking-wide">Upload Produk</h2>
+                                    </div>
+                                    
+                                    {/* FIX: GAMBAR UTUH (CONTAIN + BG HITAM) */}
+                                    <div className={`relative w-full aspect-video rounded-xl border-2 border-dashed border-slate-700/50 flex flex-col items-center justify-center overflow-hidden cursor-pointer hover:border-indigo-500/50 transition-all bg-black ${imagePreview ? 'p-0 border-none' : ''}`}>
+                                        <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 opacity-0 z-20 cursor-pointer" />
                                         {imagePreview ? (
-                                            <>
-                                                <img src={imagePreview} className="w-full h-auto max-h-[400px] object-contain rounded-lg shadow-md z-10" />
-                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 bg-black/40 backdrop-blur-[1px]">
-                                                    <div className="bg-black/60 px-4 py-2 rounded-full backdrop-blur-sm flex items-center gap-2 border border-white/10">
-                                                        <RefreshCw className="w-3 h-3 text-white" /> <span className="text-xs font-medium">Ganti Gambar</span>
-                                                    </div>
-                                                </div>
-                                            </>
+                                            <img src={imagePreview} className="w-full h-full object-contain z-10" />
                                         ) : (
-                                            <div className="text-center p-4">
-                                                <div className="w-12 h-12 bg-indigo-500/10 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110"><Upload className="w-5 h-5 text-indigo-400" /></div>
-                                                <p className="text-sm font-medium text-slate-300">Upload Screenshot Produk</p>
-                                            </div>
+                                            <div className="text-center group"><div className="w-14 h-14 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"><Upload className="w-6 h-6 text-slate-400 group-hover:text-white" /></div><p className="text-xs text-slate-500 font-medium">Klik Area Ini</p></div>
                                         )}
                                     </div>
-                                    <div className="mt-4">
-                                        <label className="text-[11px] font-bold text-slate-400 mb-1.5 block ml-1">NAMA PRODUK (Opsional)</label>
-                                        <input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="Misal: Serum Glowing" className="w-full bg-slate-950/50 border border-slate-800 focus:border-indigo-500 rounded-xl px-4 py-3 text-sm text-white focus:outline-none transition-colors" />
+                                    
+                                    <input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="Nama Produk (Opsional)" className="w-full mt-2 input-dark rounded-xl px-4 py-3 text-sm text-white focus:outline-none" />
+                                </div>
+
+                                {/* Inputs */}
+                                <div className="glass-card rounded-[24px] p-6 space-y-4">
+                                    <div>
+                                        <label className="text-[10px] font-bold text-emerald-400 uppercase mb-1.5 flex items-center gap-1"><Sparkles className="w-3 h-3"/> Target Viral</label>
+                                        <input type="text" value={seoKeywords} onChange={(e) => setSeoKeywords(e.target.value)} placeholder="Contoh: Promo Gila" className="w-full input-dark rounded-xl px-4 py-3 text-sm text-white focus:outline-none" />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-bold text-blue-400 uppercase mb-1.5 flex items-center gap-1"><FileText className="w-3 h-3"/> Info Tambahan</label>
+                                        <textarea value={additionalInfo} onChange={(e) => setAdditionalInfo(e.target.value)} placeholder="Detail..." className="w-full input-dark rounded-xl px-4 py-3 text-sm text-white focus:outline-none resize-none h-20"></textarea>
                                     </div>
                                 </div>
+
+                                <button onClick={handleGenerateScript} disabled={loadingStep !== null} className="w-full btn-glow text-white font-bold py-5 rounded-2xl shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3">
+                                    {loadingStep === 'scripting' ? <RefreshCw className="w-5 h-5 animate-spin"/> : <Wand2 className="w-5 h-5"/>}
+                                    <span className="tracking-wide font-display">{loadingStep ? 'MEMPROSES...' : 'BUAT KONTEN AJAIB'}</span>
+                                </button>
                             </div>
 
-                            {/* STRATEGY SECTION */}
-                            <div className="bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-1 shadow-2xl">
-                                <div className="bg-slate-800/50 p-3 px-5 border-b border-white/5 flex items-center gap-2">
-                                    <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-bold">2</div>
-                                    <h2 className="text-xs font-bold text-emerald-300 uppercase tracking-wider">Strategi Konten</h2>
-                                </div>
-                                <div className="p-5 space-y-5">
-                                    <div>
-                                        <label className="text-[11px] font-bold text-emerald-400 mb-1.5 flex items-center gap-1 ml-1"><Hash className="w-3 h-3" /> KATA KUNCI (WAJIB DISEBUT)</label>
-                                        <input type="text" value={seoKeywords} onChange={(e) => setSeoKeywords(e.target.value)} placeholder="Contoh: Promo Gila" className="w-full bg-slate-950/50 border border-emerald-900/50 focus:border-emerald-500 rounded-xl px-4 py-3 text-sm text-white focus:outline-none" />
-                                        <p className="text-[10px] text-slate-500 mt-1.5 ml-1">💡 Diucapkan 2x (awal & akhir) biar <span className="text-emerald-400 font-bold">Cepet Viral</span>.</p>
+                            {/* RIGHT COLUMN */}
+                            <div className="lg:col-span-7 space-y-6">
+                                {/* Settings Area - GRID SUARA TAMPIL SEMUA */}
+                                <div className="glass-card p-6 rounded-[24px] space-y-6">
+                                    <div className="flex items-center gap-2 mb-2 border-b border-white/5 pb-3">
+                                        <div className="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-xs">2</div>
+                                        <h2 className="text-sm font-bold text-purple-200 uppercase tracking-wide">Pengaturan Suara</h2>
                                     </div>
+                                    
                                     <div>
-                                        <label className="text-[11px] font-bold text-blue-400 mb-1.5 flex items-center gap-1 ml-1"><FileText className="w-3 h-3" /> CATATAN TAMBAHAN</label>
-                                        <textarea value={additionalInfo} onChange={(e) => setAdditionalInfo(e.target.value)} placeholder="Misal: Diskon 50%..." className="w-full bg-slate-950/50 border border-blue-900/50 focus:border-blue-500 rounded-xl px-4 py-3 text-sm text-white focus:outline-none resize-none h-24"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* SETTINGS SECTION */}
-                            <div className="bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-1 shadow-2xl">
-                                <div className="bg-slate-800/50 p-3 px-5 border-b border-white/5 flex items-center gap-2">
-                                    <div className="w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 text-xs font-bold">3</div>
-                                    <h2 className="text-xs font-bold text-purple-300 uppercase tracking-wider">Setting Suara</h2>
-                                </div>
-                                <div className="p-5 space-y-5">
-                                    <div>
-                                        <label className="text-[11px] font-bold text-slate-400 mb-2 block ml-1">KARAKTER SUARA</label>
-                                        <div className="grid grid-cols-3 gap-2">
+                                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 block">Pilih Karakter Suara</label>
+                                        {/* GRID 3 KOLOM */}
+                                        <div className="grid grid-cols-3 gap-3">
                                             {voices.map((v) => (
-                                                <button key={v} onClick={() => setVoice(v)} className={`text-xs font-medium py-2.5 px-2 rounded-xl border transition-all ${voice === v ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg' : 'bg-slate-950 border-slate-800 text-slate-400'}`}>{v}</button>
+                                                <button 
+                                                    key={v} 
+                                                    onClick={() => setVoice(v)} 
+                                                    className={`py-3 px-2 rounded-xl text-sm font-bold transition-all border ${voice === v ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg' : 'bg-slate-900/50 border-slate-700/50 text-slate-400 hover:border-slate-500 hover:text-slate-200'}`}
+                                                >
+                                                    {v}
+                                                </button>
                                             ))}
                                         </div>
                                     </div>
+
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="text-[11px] font-bold text-slate-400 mb-1.5 block ml-1">GAYA BICARA</label>
-                                            <select value={accent} onChange={(e) => setAccent(e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500">
-                                                {accents.map(opt => <option key={opt.id} value={opt.id}>{opt.label}</option>)}
+                                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 block">Gaya Bicara</label>
+                                            <select value={accent} onChange={(e) => setAccent(e.target.value)} className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl px-4 py-3 text-sm text-white focus:outline-none cursor-pointer">
+                                                {accents.map(o=><option key={o.id} value={o.id}>{o.label}</option>)}
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="text-[11px] font-bold text-slate-400 mb-1.5 block ml-1">DURASI</label>
-                                            <div className="flex bg-slate-950 border border-slate-800 rounded-xl p-1">
-                                                {durations.map(d => (
-                                                    <button key={d.val} onClick={() => setDuration(d.val)} className={`flex-1 text-[10px] py-1.5 rounded-lg transition-all ${duration === d.val ? 'bg-purple-600 text-white font-bold' : 'text-slate-400'}`}>{d.label}</button>
-                                                ))}
-                                            </div>
+                                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 block">Durasi</label>
+                                            <select value={duration} onChange={(e) => setDuration(e.target.value)} className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl px-4 py-3 text-sm text-white focus:outline-none cursor-pointer">
+                                                {durations.map(d=><option key={d.val} value={d.val}>{d.label}</option>)}
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <button onClick={handleGenerateScript} disabled={loadingStep !== null} className="w-full relative overflow-hidden group bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white font-bold py-5 rounded-2xl shadow-xl shadow-purple-900/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                                <div className="flex items-center justify-center gap-2 relative z-10">
-                                    {loadingStep === 'analyzing' ? <><RefreshCw className="w-5 h-5 animate-spin" /> Analisa Gambar...</> : loadingStep === 'scripting' ? <><Wand2 className="w-5 h-5 animate-spin" /> Menulis Naskah...</> : <><Sparkles className="w-5 h-5 fill-white" /> BUAT KONTEN VIRAL</>}
-                                </div>
-                            </button>
-                        </div>
-
-                        {/* RIGHT COLUMN */}
-                        <div className="lg:col-span-7 flex flex-col gap-6">
-                            <div className="flex-1 bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-3xl p-1 shadow-2xl flex flex-col min-h-[500px]">
-                                <div className="bg-slate-800/50 p-3 px-5 border-b border-white/5 flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 text-xs font-bold">4</div>
-                                        <h2 className="text-xs font-bold text-blue-300 uppercase tracking-wider">Smart Editor</h2>
+                                {/* Editor & Output */}
+                                <div className="glass-card rounded-[24px] overflow-hidden flex flex-col min-h-[400px]">
+                                    <div className="bg-slate-900/50 p-2 flex gap-1 border-b border-white/5">
+                                        <button onClick={() => setActiveTab('script')} className={`flex-1 py-3 text-xs font-bold rounded-xl transition-all ${activeTab === 'script' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:text-slate-300'}`}>NASKAH AUDIO</button>
+                                        <button onClick={() => setActiveTab('extras')} className={`flex-1 py-3 text-xs font-bold rounded-xl transition-all ${activeTab === 'extras' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:text-slate-300'}`}>CAPTION & TAGS</button>
                                     </div>
-                                    <div className="flex gap-1 bg-slate-950 p-1 rounded-lg border border-white/5">
-                                        <button onClick={() => setActiveTab('script')} className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all ${activeTab === 'script' ? 'bg-blue-600 text-white' : 'text-slate-500'}`}>NASKAH (VO)</button>
-                                        <button onClick={() => setActiveTab('extras')} className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all flex items-center gap-1 ${activeTab === 'extras' ? 'bg-pink-600 text-white' : 'text-slate-500'}`}><Sparkles className="w-3 h-3" /> CAPTION</button>
-                                    </div>
-                                </div>
 
-                                <div className="flex-1 p-1 relative">
-                                    {activeTab === 'script' ? (
-                                        <textarea value={generatedScript} onChange={(e) => setGeneratedScript(e.target.value)} placeholder="Hasil naskah muncul disini..." className="w-full h-full bg-transparent p-4 text-base leading-relaxed text-slate-200 focus:outline-none resize-none font-mono placeholder:text-slate-700"></textarea>
-                                    ) : (
-                                        <div className="w-full h-full p-4 overflow-y-auto custom-scrollbar">
-                                            {marketingExtras ? (
-                                                <div className="space-y-4">
-                                                    <div className="bg-slate-950/50 border border-white/5 rounded-xl p-4">
-                                                        <h3 className="text-xs font-bold text-emerald-400 mb-2 flex gap-2"><UserCircle className="w-3 h-3"/> TARGET</h3>
-                                                        <p className="text-sm text-slate-300 whitespace-pre-wrap">{marketingExtras.split('[Rekomendasi Musik]:')[0].replace('[Target Audiens]:', '').trim()}</p>
-                                                    </div>
-                                                    <div className="bg-slate-950/50 border border-white/5 rounded-xl p-4">
-                                                        <h3 className="text-xs font-bold text-purple-400 mb-2 flex gap-2"><Music className="w-3 h-3"/> MUSIK</h3>
-                                                        <p className="text-sm text-slate-300">{marketingExtras.split('[Caption Video]:')[0].split('[Rekomendasi Musik]:')[1]?.trim() || "-"}</p>
-                                                    </div>
-                                                    <div className="bg-slate-950/50 border border-white/5 rounded-xl p-4">
-                                                        <div className="flex justify-between items-center mb-2">
-                                                            <h3 className="text-xs font-bold text-pink-400 flex gap-2"><FileText className="w-3 h-3"/> CAPTION</h3>
-                                                            <button onClick={() => copyToClipboard(marketingExtras.split('[Caption Video]:')[1]?.trim())} className="text-[10px] bg-slate-800 px-2 py-1 rounded flex items-center gap-1 text-slate-400 hover:text-white"><Copy className="w-3 h-3" /> Salin</button>
+                                    <div className="flex-1 p-1 relative bg-slate-950/30">
+                                        {activeTab === 'script' ? (
+                                            <textarea value={generatedScript} onChange={(e) => setGeneratedScript(e.target.value)} placeholder="Hasil AI muncul disini..." className="w-full h-full bg-transparent p-6 text-base leading-relaxed text-slate-200 focus:outline-none resize-none font-mono"></textarea>
+                                        ) : (
+                                            <div className="p-6 h-full overflow-y-auto space-y-6 custom-scrollbar">
+                                                {marketingExtras ? (
+                                                    <div className="space-y-6">
+                                                        <div className="space-y-2">
+                                                            <label className="text-xs font-bold text-purple-400 uppercase tracking-widest flex items-center gap-2"><Music className="w-3 h-3"/> Musik Latar</label>
+                                                            <div className="p-4 rounded-xl bg-slate-900/50 border border-white/5 text-sm text-slate-300">{marketingExtras.split('[Caption Video]:')[0].split('[Rekomendasi Musik]:')[1]?.trim() || "-"}</div>
                                                         </div>
-                                                        <p className="text-sm text-slate-300 whitespace-pre-wrap font-mono">{marketingExtras.split('[Caption Video]:')[1]?.trim() || "-"}</p>
+                                                        <div className="space-y-2">
+                                                            <div className="flex justify-between"><label className="text-xs font-bold text-pink-400 uppercase tracking-widest flex items-center gap-2"><FileText className="w-3 h-3"/> Caption</label><button onClick={() => copyToClipboard(marketingExtras.split('[Caption Video]:')[1]?.trim())} className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1"><Copy className="w-3 h-3"/> Salin</button></div>
+                                                            <div className="p-4 rounded-xl bg-slate-900/50 border border-white/5 text-sm text-slate-300 font-mono whitespace-pre-wrap">{marketingExtras.split('[Caption Video]:')[1]?.trim() || "-"}</div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ) : (
-                                                <div className="flex flex-col items-center justify-center h-full text-slate-600">
-                                                    <Sparkles className="w-8 h-8 mb-2 opacity-50" />
-                                                    <p className="text-xs">Generate dulu untuk melihat ide caption</p>
-                                                </div>
-                                            )}
+                                                ) : <div className="flex flex-col items-center justify-center h-full text-slate-600 gap-3"><LayoutGrid className="w-10 h-10 opacity-20" /><p className="text-sm">Belum ada data</p></div>}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="p-4 bg-slate-900/50 border-t border-white/5 backdrop-blur-xl">
+                                        {activeTab === 'script' && (
+                                            <button onClick={handleGenerateAudio} disabled={loadingStep !== null || !generatedScript} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">
+                                                {loadingStep === 'voicing' ? <RefreshCw className="w-5 h-5 animate-spin"/> : <FileAudio className="w-5 h-5"/>}
+                                                {loadingStep === 'voicing' ? 'MERACIK SUARA...' : 'CONVERT KE AUDIO'}
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {audioUrl && (
+                                    <div className="glass-card border-emerald-500/30 p-6 rounded-3xl flex items-center justify-between shadow-2xl animate-float">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center"><CheckCircle2 className="w-6 h-6 text-emerald-400" /></div>
+                                            <div><h3 className="text-white font-bold text-lg">Audio Siap!</h3><p className="text-emerald-400/60 text-xs font-bold tracking-wider">SIAP DOWNLOAD</p></div>
                                         </div>
-                                    )}
-                                </div>
-
-                                <div className="p-4 border-t border-white/5 bg-slate-900/30 rounded-b-3xl">
-                                    {activeTab === 'script' ? (
-                                        <button onClick={handleGenerateAudio} disabled={loadingStep !== null || !generatedScript} className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50">
-                                            {loadingStep === 'voicing' ? <><RefreshCw className="w-5 h-5 animate-spin" /> Meracik Suara...</> : <><FileAudio className="w-5 h-5" /> CONVERT KE SUARA</>}
-                                        </button>
-                                    ) : (
-                                        <button onClick={() => setActiveTab('script')} className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3.5 rounded-xl transition-all">KEMBALI KE NASKAH</button>
-                                    )}
-                                </div>
-                            </div>
-
-                            {audioUrl && (
-                                <div className="bg-gradient-to-br from-emerald-900/80 to-teal-900/80 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-6 animate-in slide-in-from-bottom-6 fade-in duration-500 shadow-2xl">
-                                    <div className="flex items-center justify-between mb-6">
                                         <div className="flex items-center gap-3">
-                                            <div className="bg-emerald-500 rounded-full p-1.5 shadow-[0_0_15px_rgba(16,185,129,0.5)]"><CheckCircle2 className="w-5 h-5 text-white" /></div>
-                                            <div><h3 className="text-white font-bold text-lg leading-none">Audio Selesai!</h3><p className="text-emerald-300/60 text-xs mt-1">Siap dipakai</p></div>
+                                            <audio src={audioUrl} controls className="h-10 w-32 md:w-48 opacity-80 hover:opacity-100 transition-opacity" />
+                                            <button onClick={handleDownload} className="bg-white text-emerald-900 p-3 rounded-xl hover:scale-105 transition-transform shadow-lg"><Download className="w-5 h-5" /></button>
                                         </div>
                                     </div>
-                                    <div className="bg-black/30 rounded-2xl p-4 mb-5 border border-white/5">
-                                        <audio ref={audioRef} controls src={audioUrl} className="w-full h-10 accent-emerald-500" />
-                                    </div>
-                                    <button onClick={handleDownload} className="w-full bg-white text-emerald-900 hover:bg-emerald-50 font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 group active:scale-95">
-                                        <Download className="w-5 h-5 group-hover:scale-110 transition-transform" /> DOWNLOAD SEKARANG
-                                    </button>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div className="mt-16 border-t border-white/5 pt-8 text-center pb-8">
-                        <p className="text-slate-500 text-[10px] uppercase tracking-widest mb-2">Secure Cloud Engine • AI Powered v2.5</p>
-                        <p className="text-slate-600 text-xs">&copy; {new Date().getFullYear()} <span className="text-slate-400 font-bold">Jauhari Digital Corp</span>. All Rights Reserved.</p>
+                        
+                        <div className="mt-20 text-center pt-8 border-t border-white/5">
+                            <p className="text-slate-600 text-[10px] font-bold tracking-widest uppercase">&copy; {new Date().getFullYear()} Jauhari Digital Corp.</p>
+                        </div>
                     </div>
                 </div>
             );
